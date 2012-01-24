@@ -64,13 +64,12 @@ public interface ViewService {
      *            {@link PathContext} containing all the data for the path
      * @param view
      *            name of the view to build a path to
-     * @param absolute
-     *            {@code true} if an absolute URL is to be built. If {@code false}, the
-     *            URL path is relative to the document root.
+     * @param type
+     *            {@link PathType} to be built
      * @return the URL path that was built, or {@code null} if no view was found to be
      *         able to render the provided data
      */
-    String buildPath(PathContext context, String view, boolean absolute);
+    String buildPath(PathContext context, String view, PathType type);
 
     /**
      * Analyzes the given path, and invokes a view handler for processing the request.

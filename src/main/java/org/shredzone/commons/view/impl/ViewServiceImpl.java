@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.shredzone.commons.view.PathContext;
+import org.shredzone.commons.view.PathType;
 import org.shredzone.commons.view.ViewContext;
 import org.shredzone.commons.view.ViewService;
 import org.shredzone.commons.view.exception.PageNotFoundException;
@@ -123,7 +124,7 @@ public class ViewServiceImpl implements ViewService {
     }
 
     @Override
-    public String buildPath(PathContext data, String view, boolean absolute) {
+    public String buildPath(PathContext data, String view, PathType type) {
         Collection<ViewPattern> vpList;
 
         if (StringUtils.hasText(view)) {
@@ -147,7 +148,7 @@ public class ViewServiceImpl implements ViewService {
         for (ViewPattern pattern : vpList) {
             String path = pattern.evaluate(evContext, data);
             if (path != null) {
-                return processPath(path, absolute);
+                return processPath(path, type);
             }
         }
 
@@ -184,18 +185,20 @@ public class ViewServiceImpl implements ViewService {
     /**
      * Processes a path, prefixing the servlet name and making it absolute if requested.
      *
-     * @param req
-     *            {@link HttpServletRequest} to be used
      * @param path
      *            relative path to be processed
-     * @param absolute
-     *            {@code true} if an absolute URL is requested
+     * @param type
+     *            {@link PathType} to be returned
      * @return URL to this path
      */
-    private String processPath(String path, boolean absolute) {
+    private String processPath(String path, PathType type) {
+        if (type == PathType.VIEW) {
+            return path;
+        }
+        
         StringBuilder sb = new StringBuilder();
 
-        if (absolute) {
+        if (type == PathType.ABSOLUTE) {
             sb.append(getViewContext().getRequestServerUrl());
         }
 
