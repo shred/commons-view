@@ -20,23 +20,27 @@
 
 package org.shredzone.commons.view.exception;
 
-import javax.servlet.http.HttpServletResponse;
-
 /**
- * This exception is thrown when an error happened because there is no view defined for
- * the requested URL.
+ * This exception is thrown when a generic HTTP error happened.
  *
  * @author Richard "Shred" Körber
  */
-public class PageNotFoundException extends ErrorResponseException {
-    private static final long serialVersionUID = -1119789724918850606L;
+public class ErrorResponseException extends ViewException {
+    private static final long serialVersionUID = 8993197244051374195L;
 
-    public PageNotFoundException() {
-        super(HttpServletResponse.SC_NOT_FOUND);
+    private final int responseCode;
+
+    public ErrorResponseException(int responseCode) {
+        this.responseCode = responseCode;
     }
 
-    public PageNotFoundException(String msg) {
-        super(HttpServletResponse.SC_NOT_FOUND, msg);
+    public ErrorResponseException(int responseCode, String msg) {
+        super(msg);
+        this.responseCode = responseCode;
+    }
+
+    public int getResponseCode() {
+        return responseCode;
     }
 
 }

@@ -34,6 +34,7 @@ import org.shredzone.commons.view.PathContext;
 import org.shredzone.commons.view.PathType;
 import org.shredzone.commons.view.ViewContext;
 import org.shredzone.commons.view.ViewService;
+import org.shredzone.commons.view.exception.ErrorResponseException;
 import org.shredzone.commons.view.exception.PageNotFoundException;
 import org.shredzone.commons.view.exception.ViewException;
 import org.shredzone.commons.view.manager.ViewManager;
@@ -89,9 +90,14 @@ public class ViewServiceImpl implements ViewService {
             context.putTypedArgument(ServletContext.class, servletContext);
             context.putTypedArgument(HttpServletResponse.class, resp);
             renderViewName = invokeView(path);
-        } catch (PageNotFoundException ex) {
-            LOG.info("Page not found: {}", ex.getMessage());
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        } catch (ErrorResponseException ex) {
+            if (ex.getMessage() != null) {
+                LOG.info("HTTP error {}: {}", ex.getResponseCode(), ex.getMessage());
+                resp.sendError(ex.getResponseCode(), ex.getMessage());
+            } else {
+                LOG.info("HTTP error {}", ex.getResponseCode());
+                resp.sendError(ex.getResponseCode());
+            }
             return;
         }
 
@@ -195,7 +201,7 @@ public class ViewServiceImpl implements ViewService {
         if (type == PathType.VIEW) {
             return path;
         }
-        
+
         StringBuilder sb = new StringBuilder();
 
         if (type == PathType.ABSOLUTE) {
