@@ -22,6 +22,7 @@ package org.shredzone.commons.view.manager;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
 
 import javax.servlet.ServletRequest;
 import javax.swing.text.View;
@@ -125,7 +126,14 @@ public class ViewInvoker {
         try {
             Object renderViewName = ReflectionUtils.invokeMethod(method, bean, values);
             return (renderViewName != null ? renderViewName.toString() : null);
-        } catch (IllegalStateException ex) {
+        } catch (UndeclaredThrowableException ex) { // Spring 3.1
+            Throwable cause = ex.getCause();
+            if (cause instanceof ViewException) {
+                throw (ViewException) cause;
+            } else {
+                throw ex;
+            }
+        } catch (IllegalStateException ex) { // Spring 3.0
             Throwable cause = ex.getCause();
             if (cause instanceof ViewException) {
                 throw (ViewException) cause;
