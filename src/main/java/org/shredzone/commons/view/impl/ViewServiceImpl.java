@@ -139,7 +139,7 @@ public class ViewServiceImpl implements ViewService {
             // Find a view by the signature...
             ViewPattern pattern = viewManager.getViewPatternForSignature(data.getSignature());
             if (pattern == null) {
-                throw new IllegalArgumentException("No view for signature");
+                throw new IllegalArgumentException("No view for signature: " + data.getSignature());
             }
             vpList = Collections.singletonList(pattern);
         }
