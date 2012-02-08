@@ -74,16 +74,10 @@ public class ViewServiceImpl implements ViewService {
 
     @Override
     public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        // Store the original requesting URI, so fragment jsp and tags can
-        // refer to the originating page.
-        req.setAttribute("selfUri", req.getRequestURI());
-
         String path = req.getPathInfo();
         if (path == null) {
             path = "";
         }
-
-        resp.setDateHeader("Date", System.currentTimeMillis());
 
         for (ViewInterceptor interceptor : interceptors) {
             interceptor.onRequest(req, resp);
@@ -112,8 +106,6 @@ public class ViewServiceImpl implements ViewService {
         }
 
         if (renderViewName != null) {
-            resp.setHeader("Vary", "Accept-Language");
-
             for (ViewInterceptor interceptor : interceptors) {
                 String newViewName = interceptor.onRendering(renderViewName, req, resp);
                 if (newViewName != null) {
