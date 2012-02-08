@@ -112,10 +112,11 @@ public class ViewServiceImpl implements ViewService {
 
     @Override
     public String invokeView(String path) throws ViewException {
+        ViewContext context = getViewContext();
+
         for (ViewPattern pattern : viewManager.getViewPatterns()) {
             Map<String, String> pathParts = pattern.resolve(path);
             if (pathParts != null) { // matched!
-                ViewContext context = getViewContext();
                 context.setPathParts(pathParts);
                 return pattern.getInvoker().invoke(context);
             }
