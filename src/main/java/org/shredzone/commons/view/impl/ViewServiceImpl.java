@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -33,10 +34,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.shredzone.commons.view.PathContext;
 import org.shredzone.commons.view.PathType;
 import org.shredzone.commons.view.ViewContext;
+import org.shredzone.commons.view.ViewInterceptor;
 import org.shredzone.commons.view.ViewService;
 import org.shredzone.commons.view.exception.ErrorResponseException;
 import org.shredzone.commons.view.exception.PageNotFoundException;
 import org.shredzone.commons.view.exception.ViewException;
+import org.shredzone.commons.view.manager.ViewInvoker;
 import org.shredzone.commons.view.manager.ViewManager;
 import org.shredzone.commons.view.manager.ViewPattern;
 import org.shredzone.commons.view.util.ViewPathEvaluationContext;
@@ -60,6 +63,15 @@ public class ViewServiceImpl implements ViewService {
     private @Resource ConversionService conversionService;
     private @Resource ApplicationContext appContext;
 
+    private Collection<ViewInterceptor> interceptors;
+
+    @PostConstruct
+    protected void setup() {
+        // Cannot immediately inject to the collection, as it fails when no
+        // ViewInterceptor bean was found.
+        interceptors = appContext.getBeansOfType(ViewInterceptor.class).values();
+    }
+
     @Override
     public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         // Store the original requesting URI, so fragment jsp and tags can
@@ -73,6 +85,10 @@ public class ViewServiceImpl implements ViewService {
 
         resp.setDateHeader("Date", System.currentTimeMillis());
 
+        for (ViewInterceptor interceptor : interceptors) {
+            interceptor.onRequest(req, resp);
+        }
+
         String renderViewName = null;
 
         try {
@@ -81,6 +97,12 @@ public class ViewServiceImpl implements ViewService {
             context.putTypedArgument(HttpServletResponse.class, resp);
             renderViewName = invokeView(path);
         } catch (ErrorResponseException ex) {
+            for (ViewInterceptor interceptor : interceptors) {
+                if (interceptor.onErrorResponse(ex, req, resp)) {
+                    return;
+                }
+            }
+
             if (ex.getMessage() != null) {
                 resp.sendError(ex.getResponseCode(), ex.getMessage());
             } else {
@@ -91,6 +113,13 @@ public class ViewServiceImpl implements ViewService {
 
         if (renderViewName != null) {
             resp.setHeader("Vary", "Accept-Language");
+
+            for (ViewInterceptor interceptor : interceptors) {
+                String newViewName = interceptor.onRendering(renderViewName, req, resp);
+                if (newViewName != null) {
+                    renderViewName = newViewName;
+                }
+            }
 
             String fullViewPath = getTemplatePath(renderViewName);
             RequestDispatcher dispatcher = servletContext.getRequestDispatcher(fullViewPath);
@@ -111,6 +140,12 @@ public class ViewServiceImpl implements ViewService {
             Map<String, String> pathParts = pattern.resolve(path);
             if (pathParts != null) { // matched!
                 context.setPathParts(pathParts);
+                ViewInvoker invoker = pattern.getInvoker();
+
+                for (ViewInterceptor interceptor : interceptors) {
+                    interceptor.onViewHandlerInvocation(context, invoker.getBean(), invoker.getMethod());
+                }
+
                 return pattern.getInvoker().invoke(context);
             }
         }
