@@ -52,11 +52,8 @@ import org.springframework.util.StringUtils;
 public class ViewManager {
     private static final Logger LOG = LoggerFactory.getLogger(ViewManager.class);
 
-    @Resource
-    private ApplicationContext applicationContext;
-
-    @Resource
-    private ConversionService conversionService;
+    private @Resource ApplicationContext applicationContext;
+    private @Resource ConversionService conversionService;
 
     private Map<String, List<ViewPattern>> patternMap = new HashMap<String, List<ViewPattern>>();
     private Map<Signature, ViewPattern> signatureMap = new HashMap<Signature, ViewPattern>();

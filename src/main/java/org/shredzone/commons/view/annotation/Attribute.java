@@ -8,7 +8,7 @@
  * it under the terms of the GNU Library General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
 /**
  * If a view handler parameter is annotated with {@link Attribute}, the servlet attribute
  * with the given name passed in.
- * 
+ *
  * @author Richard "Shred" Körber
  */
 @Target(ElementType.PARAMETER)

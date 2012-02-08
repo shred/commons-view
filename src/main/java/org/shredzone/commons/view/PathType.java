@@ -26,17 +26,17 @@ package org.shredzone.commons.view;
  * @author Richard "Shred" Körber
  */
 public enum PathType {
-    
+
     /**
      * Relative to the view servlet (e.g. "/posting/123.html")
      */
     VIEW,
-    
+
     /**
      * Relative URL (e.g. "/servlets/views/posting/123.html")
      */
     RELATIVE,
-    
+
     /**
      * Absolute URL (e.g. "http://example.com/servlets/views/posting/123.html")
      */

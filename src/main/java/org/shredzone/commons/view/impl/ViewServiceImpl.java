@@ -55,17 +55,10 @@ import org.springframework.util.StringUtils;
 @Component
 public class ViewServiceImpl implements ViewService {
 
-    @Resource
-    private ViewManager viewManager;
-
-    @Resource
-    private ServletContext servletContext;
-
-    @Resource
-    private ConversionService conversionService;
-
-    @Resource
-    private ApplicationContext appContext;
+    private @Resource ViewManager viewManager;
+    private @Resource ServletContext servletContext;
+    private @Resource ConversionService conversionService;
+    private @Resource ApplicationContext appContext;
 
     @Override
     public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws Exception {
