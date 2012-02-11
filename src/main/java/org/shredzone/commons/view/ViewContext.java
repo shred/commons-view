@@ -100,4 +100,19 @@ public interface ViewContext {
      */
     String getParameter(String name);
 
+    /**
+     * Sets a View qualifier.
+     *
+     * @param qualifier
+     *            qualifier to be used, or {@code null} for the standard qualifier
+     */
+    void setQualifier(String qualifier);
+
+    /**
+     * Gets a View qualifier.
+     *
+     * @return qualifier to be used, or {@code null} for the standard qualifier
+     */
+    String getQualifier();
+
 }

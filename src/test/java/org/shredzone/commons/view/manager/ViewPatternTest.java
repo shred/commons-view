@@ -20,6 +20,7 @@
 
 package org.shredzone.commons.view.manager;
 
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedSet;
@@ -27,6 +28,8 @@ import java.util.TreeSet;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.shredzone.commons.view.annotation.View;
+import org.shredzone.commons.view.annotation.ViewGroup;
 
 /**
  * Unit tests for {@link ViewPattern}.
@@ -36,8 +39,11 @@ import org.junit.Test;
 public class ViewPatternTest {
 
     @Test
-    public void functionalTest() {
-        ViewPattern pat = new ViewPattern("test/${blafoo}/and/a/${path}.html", null);
+    @View(pattern = "test/${blafoo}/and/a/${path}.html")
+    public void functionalTest() throws NoSuchMethodException {
+        Method m = this.getClass().getMethod("functionalTest");
+
+        ViewPattern pat = new ViewPattern(m.getAnnotation(View.class), null);
         Assert.assertEquals(107, pat.getWeight());
         Assert.assertEquals("test/${blafoo}/and/a/${path}.html", pat.getPattern());
         Assert.assertEquals("\\Qtest/\\E([^/]*)\\Q/and/a/\\E([^/]*)\\Q.html\\E", pat.getRegEx().pattern());
@@ -74,11 +80,19 @@ public class ViewPatternTest {
     }
 
     @Test
-    public void orderTest() {
+    @ViewGroup({
+        @View(pattern = "test/${blafoo}.html"),
+        @View(pattern = "test.html"),
+        @View(pattern = "test/${blafoo}/and/a/${path}.html")
+    })
+    public void orderTest() throws NoSuchMethodException {
+        Method m = this.getClass().getMethod("orderTest");
         SortedSet<ViewPattern> set = new TreeSet<ViewPattern>();
-        set.add(new ViewPattern("test/${blafoo}.html", null));
-        set.add(new ViewPattern("test.html", null));
-        set.add(new ViewPattern("test/${blafoo}/and/a/${path}.html", null));
+
+        ViewGroup groupAnno = m.getAnnotation(ViewGroup.class);
+        for (View view : groupAnno.value()) {
+            set.add(new ViewPattern(view, null));
+        }
 
         Iterator<ViewPattern> it = set.iterator();
         Assert.assertEquals("test/${blafoo}/and/a/${path}.html", it.next().getPattern());

@@ -27,37 +27,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * A view handler method is annotated with {@link View}.
+ * Annotates a String parameter of the view handler. This parameter is set to the View
+ * qualifier that is used, or {@code null} for the standard qualifier.
  * <p>
- * If a handler method is able to handle multiple views, {@link ViewGroup} is used
- * instead to group several {@link View} annotations.
+ * Qualifiers are always optional, so there is no need to add the {@link Optional}
+ * annotation.
  *
  * @author Richard "Shred" Körber
  */
-@Target(ElementType.METHOD)
+@Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface View {
-
-    /**
-     * View name. If unset, a view name is generated from the method name.
-     */
-    String name() default "";
-
-    /**
-     * View pattern. This is the view's url with additional placeholders.
-     */
-    String pattern();
-
-    /**
-     * View signature. If unset, the signature is automatically generated from the pattern
-     * placeholders.
-     */
-    String[] signature() default {};
-
-    /**
-     * View handler qualifier. If unset, the standard qualifier is used.
-     */
-    String qualifier() default "";
+public @interface Qualifier {
 
 }

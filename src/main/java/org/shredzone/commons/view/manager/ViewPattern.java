@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 
 import org.shredzone.commons.view.PathContext;
 import org.shredzone.commons.view.Signature;
+import org.shredzone.commons.view.annotation.View;
 import org.shredzone.commons.view.util.PathUtils;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -54,59 +55,42 @@ public class ViewPattern implements Comparable<ViewPattern> {
     private final List<Expression> expression;
     private final List<String> parameter;
     private final int weight;
-
-    /**
-     * Instantiates a new view pattern with no signature.
-     *
-     * @param pstr
-     *            the view's URL pattern
-     * @param invoker
-     *            {@link ViewInvoker} for rendering this view
-     */
-    public ViewPattern(String pstr, ViewInvoker invoker) {
-        this(pstr, invoker, (Signature) null);
-    }
+    private final String qualifier;
 
     /**
      * Instantiates a new view pattern.
      *
-     * @param pstr
-     *            the view's URL pattern
+     * @param anno
+     *            {@link View} annotation
      * @param invoker
      *            {@link ViewInvoker} for rendering this view
-     * @param signature
-     *            signature strings, may be {@code null}
      */
-    public ViewPattern(String pstr, ViewInvoker invoker, String[] signature) {
-        this(pstr, invoker,
-            (signature != null && signature.length > 0 ? new Signature(signature) : null)
-        );
-    }
-
-    /**
-     * Instantiates a new view pattern.
-     *
-     * @param pstr
-     *            the view's URL pattern
-     * @param invoker
-     *            {@link ViewInvoker} for rendering this view
-     * @param signature
-     *            {@link Signature}, may be {@code null}
-     */
-    public ViewPattern(String pstr, ViewInvoker invoker, Signature signature) {
-        this.pattern = pstr;
+    public ViewPattern(View anno, ViewInvoker invoker) {
         this.invoker = invoker;
-        this.signature = signature;
+        this.pattern = anno.pattern();
+
+        if (anno.qualifier() != null && !anno.qualifier().isEmpty()) {
+            this.qualifier = anno.qualifier();
+        } else {
+            this.qualifier = null;
+        }
+
+        String[] sig = anno.signature();
+        if (sig != null && sig.length > 0) {
+            this.signature = new Signature(sig);
+        } else {
+            this.signature = null;
+        }
 
         List<Expression> expList = new ArrayList<Expression>();
         List<String> paramList = new ArrayList<String>();
-        StringBuilder pattern = new StringBuilder();
-        compilePattern(pstr, pattern, expList, paramList);
-        this.regEx = Pattern.compile(pattern.toString());
+        StringBuilder pb = new StringBuilder();
+        compilePattern(this.pattern, pb, expList, paramList);
+        this.regEx = Pattern.compile(pb.toString());
         this.expression = Collections.unmodifiableList(expList);
         this.parameter = Collections.unmodifiableList(paramList);
 
-        this.weight = computeWeight(pstr);
+        this.weight = computeWeight(this.pattern);
     }
 
     /**
@@ -174,6 +158,15 @@ public class ViewPattern implements Comparable<ViewPattern> {
      */
     public List<String> getParameters() {
         return parameter;
+    }
+
+    /**
+     * Returns the qualifier of this pattern.
+     *
+     * @return Qualifier of this pattern, or {@code null} for the default qualifier.
+     */
+    public String getQualifier() {
+        return qualifier;
     }
 
     /**

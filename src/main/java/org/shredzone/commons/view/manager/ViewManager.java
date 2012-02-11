@@ -50,13 +50,13 @@ import org.springframework.util.StringUtils;
  */
 @Component
 public class ViewManager {
-    private static final Logger LOG = LoggerFactory.getLogger(ViewManager.class);
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private @Resource ApplicationContext applicationContext;
     private @Resource ConversionService conversionService;
 
-    private Map<String, List<ViewPattern>> patternMap = new HashMap<String, List<ViewPattern>>();
-    private Map<Signature, ViewPattern> signatureMap = new HashMap<Signature, ViewPattern>();
+    private Map<String, Map<String, List<ViewPattern>>> patternMap = new HashMap<String, Map<String, List<ViewPattern>>>();
+    private Map<String, Map<Signature, ViewPattern>> signatureMap = new HashMap<String, Map<Signature, ViewPattern>>();
     private List<ViewPattern> patternOrder = new ArrayList<ViewPattern>();
 
     /**
@@ -73,16 +73,20 @@ public class ViewManager {
      *
      * @param view
      *            View name
+     * @param qualifier
+     *            Qualifier name, or {@code null}
      * @return Collection of matching {@link ViewPattern}, or {@code null} if there is no
      *         such view
      */
-    public Collection<ViewPattern> getViewPatternsForView(String view) {
-        List<ViewPattern> result = patternMap.get(view);
-        if (result != null) {
-            return Collections.unmodifiableCollection(result);
-        } else {
-            return null;
+    public Collection<ViewPattern> getViewPatternsForView(String view, String qualifier) {
+        Map<String, List<ViewPattern>> viewMap = patternMap.get(view);
+        if (viewMap != null) {
+            List<ViewPattern> result = viewMap.get(qualifier);
+            if (result != null) {
+                return Collections.unmodifiableCollection(result);
+            }
         }
+        return null;
     }
 
     /**
@@ -90,11 +94,17 @@ public class ViewManager {
      *
      * @param signature
      *            {@link Signature} to find a {@link ViewPattern} for
+     * @param qualifier
+     *            Qualifier name, or {@code null}
      * @return {@link ViewPattern} found, or {@code null} if there is no such
      *         {@link ViewPattern}
      */
-    public ViewPattern getViewPatternForSignature(Signature signature) {
-        return signatureMap.get(signature);
+    public ViewPattern getViewPatternForSignature(Signature signature, String qualifier) {
+        Map<Signature, ViewPattern> sigMap = signatureMap.get(qualifier);
+        if (sigMap != null) {
+            return sigMap.get(signature);
+        }
+        return null;
     }
 
     /**
@@ -123,8 +133,10 @@ public class ViewManager {
             }
         }
 
-        for (List<ViewPattern> pl : patternMap.values()) {
-            Collections.sort(pl);
+        for (Map<String, List<ViewPattern>> pm : patternMap.values()) {
+            for (List<ViewPattern> pl : pm.values()) {
+                Collections.sort(pl);
+            }
         }
 
         Collections.sort(patternOrder);
@@ -144,29 +156,38 @@ public class ViewManager {
     private void processView(Object bean, Method method, View anno) {
         String name = computeViewName(method, anno);
 
-        List<ViewPattern> vpList = patternMap.get(name);
-        if (vpList == null) {
-            vpList = new ArrayList<ViewPattern>();
-            patternMap.put(name, vpList);
+        Map<String, List<ViewPattern>> vpMap = patternMap.get(name);
+        if (vpMap == null) {
+            vpMap = new HashMap<String, List<ViewPattern>>();
+            patternMap.put(name, vpMap);
         }
 
         ViewInvoker invoker = new ViewInvoker(bean, method, conversionService);
+        ViewPattern vp = new ViewPattern(anno, invoker);
 
-        String pattern = anno.pattern();
-        String[] signature = anno.signature();
-        ViewPattern vp = new ViewPattern(pattern, invoker, signature);
+        List<ViewPattern> vpList = vpMap.get(vp.getQualifier());
+        if (vpList == null) {
+            vpList = new ArrayList<ViewPattern>();
+            vpMap.put(vp.getQualifier(), vpList);
+        }
+        vpList.add(vp);
+
         Signature sig = vp.getSignature();
         if (sig != null) {
-            if (signatureMap.containsKey(sig)) {
+            Map<Signature, ViewPattern> sigMap = signatureMap.get(vp.getQualifier());
+            if (sigMap == null) {
+                sigMap = new HashMap<Signature, ViewPattern>();
+                signatureMap.put(vp.getQualifier(), sigMap);
+            }
+            if (sigMap.containsKey(sig)) {
                 throw new IllegalStateException("Signature '" + sig + "' defined twice");
             }
-            signatureMap.put(sig, vp);
+            sigMap.put(sig, vp);
         }
 
         patternOrder.add(vp);
-        vpList.add(vp);
 
-        LOG.info("Found view '{}' with pattern '{}'", name, pattern);
+        log.info("Found view '{}' with pattern '{}'", name, anno.pattern());
     }
 
     /**

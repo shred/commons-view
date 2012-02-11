@@ -37,6 +37,13 @@ public interface PathContext {
     Signature getSignature();
 
     /**
+     * Gets the qualifier to be used.
+     *
+     * @return qualifier, or {@code null} for the standard qualifier
+     */
+    String getQualifier();
+
+    /**
      * Gets a map of variables to be used.
      *
      * @return map of variables

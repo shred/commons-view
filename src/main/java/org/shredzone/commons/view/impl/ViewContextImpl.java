@@ -59,6 +59,7 @@ public class ViewContextImpl implements ViewContext {
 
     private Map<Class<?>, Object> typedValueMap = new HashMap<Class<?>, Object>();
     private Map<String, String> pathParts;
+    private String qualifier;
 
     /**
      * Sets up this bean's contents.
@@ -166,6 +167,16 @@ public class ViewContextImpl implements ViewContext {
     @Override
     public Map<String, String> getPathParts() {
         return pathParts;
+    }
+
+    @Override
+    public void setQualifier(String qualifier) {
+        this.qualifier = qualifier;
+    }
+
+    @Override
+    public String getQualifier() {
+        return qualifier;
     }
 
 }

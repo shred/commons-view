@@ -141,6 +141,8 @@ public class ViewServiceImpl implements ViewService {
             Map<String, String> pathParts = pattern.resolve(path);
             if (pathParts != null) { // matched!
                 context.setPathParts(pathParts);
+                context.setQualifier(pattern.getQualifier());
+
                 ViewInvoker invoker = pattern.getInvoker();
 
                 for (ViewInterceptor interceptor : interceptors) {
@@ -160,14 +162,14 @@ public class ViewServiceImpl implements ViewService {
 
         if (StringUtils.hasText(view)) {
             // The given view is required...
-            vpList = viewManager.getViewPatternsForView(view);
+            vpList = viewManager.getViewPatternsForView(view, data.getQualifier());
             if (vpList == null) {
                 throw new IllegalArgumentException("Unknown view " + view);
             }
 
         } else {
             // Find a view by the signature...
-            ViewPattern pattern = viewManager.getViewPatternForSignature(data.getSignature());
+            ViewPattern pattern = viewManager.getViewPatternForSignature(data.getSignature(), data.getQualifier());
             if (pattern == null) {
                 throw new IllegalArgumentException("No view for signature: " + data.getSignature());
             }

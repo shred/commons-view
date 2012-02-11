@@ -32,6 +32,7 @@ import org.shredzone.commons.view.annotation.Attribute;
 import org.shredzone.commons.view.annotation.Optional;
 import org.shredzone.commons.view.annotation.Parameter;
 import org.shredzone.commons.view.annotation.PathPart;
+import org.shredzone.commons.view.annotation.Qualifier;
 import org.shredzone.commons.view.annotation.ViewHandler;
 import org.shredzone.commons.view.exception.PageNotFoundException;
 import org.shredzone.commons.view.exception.ViewContextException;
@@ -75,18 +76,21 @@ public class ViewInvoker {
 
         for (int ix = 0; ix < annotations.length; ix++) {
             for (Annotation sub : annotations[ix]) {
-                if (sub instanceof Optional) {
-                    optionals[ix] = true;
-                } else if (
-                           sub instanceof PathPart
-                        || sub instanceof Parameter
-                        || sub instanceof Attribute) {
+                if (   sub instanceof PathPart
+                    || sub instanceof Parameter
+                    || sub instanceof Attribute
+                    || sub instanceof Qualifier) {
                     if (viewAnnotations[ix] != null) {
                         throw new IllegalArgumentException("Conflicting annotations "
                                 + sub + " and " + viewAnnotations[ix] + " in view handler "
                                 + bean.getClass().getName() + "#" + method.getName() + "()");
                     }
                     viewAnnotations[ix] = sub;
+                }
+
+                if (   sub instanceof Optional
+                    || sub instanceof Qualifier) {
+                    optionals[ix] = true;
                 }
             }
         }
@@ -190,6 +194,11 @@ public class ViewInvoker {
                 throw new ViewContextException("Missing attribute " + name);
             }
             return conversionService.convert(value, type);
+        }
+
+        if (anno instanceof Qualifier) {
+            // Qualifiers are always optional
+            return conversionService.convert(context.getQualifier(), type);
         }
 
         // Finally, try to get an object of that type from the data provider
