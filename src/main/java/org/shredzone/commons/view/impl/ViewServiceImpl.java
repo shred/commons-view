@@ -43,6 +43,8 @@ import org.shredzone.commons.view.manager.ViewInvoker;
 import org.shredzone.commons.view.manager.ViewManager;
 import org.shredzone.commons.view.manager.ViewPattern;
 import org.shredzone.commons.view.util.ViewPathEvaluationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.expression.EvaluationContext;
@@ -57,6 +59,7 @@ import org.springframework.util.StringUtils;
  */
 @Component
 public class ViewServiceImpl implements ViewService {
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private @Resource ViewManager viewManager;
     private @Resource ServletContext servletContext;
@@ -91,6 +94,12 @@ public class ViewServiceImpl implements ViewService {
             context.putTypedArgument(HttpServletResponse.class, resp);
             renderViewName = invokeView(path);
         } catch (ErrorResponseException ex) {
+            if (log.isDebugEnabled()) {
+                log.error("View handler: " + ex.getMessage(), ex);
+            } else {
+                log.error("View handler: " + ex.getMessage());
+            }
+
             for (ViewInterceptor interceptor : interceptors) {
                 if (interceptor.onErrorResponse(ex, req, resp)) {
                     return;
