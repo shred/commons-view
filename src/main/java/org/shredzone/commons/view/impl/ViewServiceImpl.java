@@ -95,9 +95,13 @@ public class ViewServiceImpl implements ViewService {
             renderViewName = invokeView(path);
         } catch (ErrorResponseException ex) {
             if (log.isDebugEnabled()) {
-                log.error("View handler: " + ex.getMessage(), ex);
-            } else {
-                log.error("View handler: " + ex.getMessage());
+                StringBuilder sb = new StringBuilder();
+                sb.append("View handler returned HTTP status ").append(ex.getResponseCode());
+                if (ex.getMessage() != null) {
+                    sb.append(" (").append(ex.getMessage()).append(')');
+                }
+                sb.append(" for path '").append(path).append('\'');
+                log.debug(sb.toString());
             }
 
             for (ViewInterceptor interceptor : interceptors) {
