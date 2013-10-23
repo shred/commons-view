@@ -29,13 +29,11 @@ import org.shredzone.commons.view.ViewService;
 import org.springframework.web.servlet.FrameworkServlet;
 
 /**
- * Cilla's main servlet for handling all kind of view requests.
- * <p>
- * The HTTP service call is delegated to the {@link CillaServletService}.
+ * Main servlet for handling all kind of view requests.
  *
  * @author Richard "Shred" Körber
  */
-public class CillaServlet extends FrameworkServlet {
+public class ViewServlet extends FrameworkServlet {
     private static final long serialVersionUID = 6193053466721043404L;
 
     @Override
