@@ -25,10 +25,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.swing.text.View;
 
 import org.shredzone.commons.view.ViewContext;
 import org.shredzone.commons.view.annotation.Attribute;
+import org.shredzone.commons.view.annotation.Cookie;
 import org.shredzone.commons.view.annotation.Optional;
 import org.shredzone.commons.view.annotation.Parameter;
 import org.shredzone.commons.view.annotation.PathPart;
@@ -79,6 +82,7 @@ public class ViewInvoker {
                 if (   sub instanceof PathPart
                     || sub instanceof Parameter
                     || sub instanceof Attribute
+                    || sub instanceof Cookie
                     || sub instanceof Qualifier) {
                     if (viewAnnotations[ix] != null) {
                         throw new IllegalArgumentException("Conflicting annotations "
@@ -194,6 +198,23 @@ public class ViewInvoker {
                 throw new ViewContextException("Missing attribute " + name);
             }
             return conversionService.convert(value, type);
+        }
+
+        if (anno instanceof Cookie) {
+            String name = ((Cookie) anno).value();
+            HttpServletRequest req = context.getValueOfType(HttpServletRequest.class);
+            for (javax.servlet.http.Cookie cookie : req.getCookies()) {
+                if (name.equals(cookie.getName())) {
+                    return conversionService.convert(cookie.getValue(), type);
+                }
+            }
+            if (optional) {
+                return conversionService.convert(null,
+                        TypeDescriptor.valueOf(String.class),
+                        TypeDescriptor.valueOf(type));
+            } else {
+                throw new ViewException("Cookie not set: " + name);
+            }
         }
 
         if (anno instanceof Qualifier) {
