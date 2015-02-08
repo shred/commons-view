@@ -36,6 +36,7 @@ import org.shredzone.commons.view.annotation.Optional;
 import org.shredzone.commons.view.annotation.Parameter;
 import org.shredzone.commons.view.annotation.PathPart;
 import org.shredzone.commons.view.annotation.Qualifier;
+import org.shredzone.commons.view.annotation.SessionId;
 import org.shredzone.commons.view.annotation.ViewHandler;
 import org.shredzone.commons.view.exception.PageNotFoundException;
 import org.shredzone.commons.view.exception.ViewContextException;
@@ -83,6 +84,7 @@ public class ViewInvoker {
                     || sub instanceof Parameter
                     || sub instanceof Attribute
                     || sub instanceof Cookie
+                    || sub instanceof SessionId
                     || sub instanceof Qualifier) {
                     if (viewAnnotations[ix] != null) {
                         throw new IllegalArgumentException("Conflicting annotations "
@@ -93,6 +95,7 @@ public class ViewInvoker {
                 }
 
                 if (   sub instanceof Optional
+                    || sub instanceof SessionId
                     || sub instanceof Qualifier) {
                     optionals[ix] = true;
                 }
@@ -214,6 +217,17 @@ public class ViewInvoker {
                         TypeDescriptor.valueOf(type));
             } else {
                 throw new ViewException("Cookie not set: " + name);
+            }
+        }
+
+        if (anno instanceof SessionId) {
+            HttpSession session = context.getValueOfType(HttpSession.class);
+            if (session != null) {
+                return conversionService.convert(session.getId(), type);
+            } else {
+                return conversionService.convert(null,
+                        TypeDescriptor.valueOf(String.class),
+                        TypeDescriptor.valueOf(type));
             }
         }
 
