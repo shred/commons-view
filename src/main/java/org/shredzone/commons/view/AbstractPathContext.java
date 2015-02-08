@@ -35,8 +35,8 @@ import java.util.Set;
  */
 public abstract class AbstractPathContext implements PathContext {
 
-    private final Set<String> propSet = new HashSet<String>();
-    private final Map<String, Object> variables = new HashMap<String, Object>();
+    private final Set<String> propSet = new HashSet<>();
+    private final Map<String, Object> variables = new HashMap<>();
 
     @Override
     public Signature getSignature() {

@@ -120,13 +120,13 @@ public final class PathUtils {
      * @return suggested suffix, or "bin" if there is no known suffix
      */
     public static String suffix(String mime) {
-        if ("image/png".equals(mime)) return "png";
-        if ("image/jpeg".equals(mime)) return "jpg";
-        if ("image/gif".equals(mime)) return "gif";
-
         // TODO: more suffixes
-
-        return "bin";
+        switch (mime) {
+            case "image/png":   return "png";
+            case "image/jpeg":  return "jpg";
+            case "image/gif":   return "gif";
+            default:            return "bin";
+        }
     }
 
     /**

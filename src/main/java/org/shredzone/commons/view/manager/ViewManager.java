@@ -55,9 +55,9 @@ public class ViewManager {
     private @Resource ApplicationContext applicationContext;
     private @Resource ConversionService conversionService;
 
-    private Map<String, Map<String, List<ViewPattern>>> patternMap = new HashMap<String, Map<String, List<ViewPattern>>>();
-    private Map<String, Map<Signature, ViewPattern>> signatureMap = new HashMap<String, Map<Signature, ViewPattern>>();
-    private List<ViewPattern> patternOrder = new ArrayList<ViewPattern>();
+    private Map<String, Map<String, List<ViewPattern>>> patternMap = new HashMap<>();
+    private Map<String, Map<Signature, ViewPattern>> signatureMap = new HashMap<>();
+    private List<ViewPattern> patternOrder = new ArrayList<>();
 
     /**
      * Returns a collection of all defined {@link ViewPattern}.
@@ -133,12 +133,7 @@ public class ViewManager {
             }
         }
 
-        for (Map<String, List<ViewPattern>> pm : patternMap.values()) {
-            for (List<ViewPattern> pl : pm.values()) {
-                Collections.sort(pl);
-            }
-        }
-
+        patternMap.values().forEach(pm -> pm.values().forEach(Collections::sort));
         Collections.sort(patternOrder);
     }
 
@@ -156,33 +151,20 @@ public class ViewManager {
     private void processView(Object bean, Method method, View anno) {
         String name = computeViewName(method, anno);
 
-        Map<String, List<ViewPattern>> vpMap = patternMap.get(name);
-        if (vpMap == null) {
-            vpMap = new HashMap<String, List<ViewPattern>>();
-            patternMap.put(name, vpMap);
-        }
+        Map<String, List<ViewPattern>> vpMap = patternMap.computeIfAbsent(name, it -> new HashMap<>());
 
         ViewInvoker invoker = new ViewInvoker(bean, method, conversionService);
         ViewPattern vp = new ViewPattern(anno, invoker);
 
-        List<ViewPattern> vpList = vpMap.get(vp.getQualifier());
-        if (vpList == null) {
-            vpList = new ArrayList<ViewPattern>();
-            vpMap.put(vp.getQualifier(), vpList);
-        }
+        List<ViewPattern> vpList = vpMap.computeIfAbsent(vp.getQualifier(), it -> new ArrayList<>());
         vpList.add(vp);
 
         Signature sig = vp.getSignature();
         if (sig != null) {
-            Map<Signature, ViewPattern> sigMap = signatureMap.get(vp.getQualifier());
-            if (sigMap == null) {
-                sigMap = new HashMap<Signature, ViewPattern>();
-                signatureMap.put(vp.getQualifier(), sigMap);
-            }
-            if (sigMap.containsKey(sig)) {
+            Map<Signature, ViewPattern> sigMap = signatureMap.computeIfAbsent(vp.getQualifier(), it -> new HashMap<>());
+            if (sigMap.putIfAbsent(sig, vp) != null) {
                 throw new IllegalStateException("Signature '" + sig + "' defined twice");
             }
-            sigMap.put(sig, vp);
         }
 
         patternOrder.add(vp);

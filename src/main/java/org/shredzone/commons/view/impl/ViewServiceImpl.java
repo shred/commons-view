@@ -82,9 +82,7 @@ public class ViewServiceImpl implements ViewService {
             path = "";
         }
 
-        for (ViewInterceptor interceptor : interceptors) {
-            interceptor.onRequest(req, resp);
-        }
+        interceptors.forEach(it -> it.onRequest(req, resp));
 
         String renderViewName = null;
 
@@ -149,9 +147,9 @@ public class ViewServiceImpl implements ViewService {
 
                 ViewInvoker invoker = pattern.getInvoker();
 
-                for (ViewInterceptor interceptor : interceptors) {
-                    interceptor.onViewHandlerInvocation(context, invoker.getBean(), invoker.getMethod());
-                }
+                interceptors.forEach(interceptor ->
+                    interceptor.onViewHandlerInvocation(context, invoker.getBean(), invoker.getMethod())
+                );
 
                 return pattern.getInvoker().invoke(context);
             }

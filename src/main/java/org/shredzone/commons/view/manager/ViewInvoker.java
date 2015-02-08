@@ -137,14 +137,7 @@ public class ViewInvoker {
         try {
             Object renderViewName = ReflectionUtils.invokeMethod(method, bean, values);
             return (renderViewName != null ? renderViewName.toString() : null);
-        } catch (UndeclaredThrowableException ex) { // Spring 3.1
-            Throwable cause = ex.getCause();
-            if (cause instanceof ViewException) {
-                throw (ViewException) cause;
-            } else {
-                throw ex;
-            }
-        } catch (IllegalStateException ex) { // Spring 3.0
+        } catch (UndeclaredThrowableException|IllegalStateException ex) {
             Throwable cause = ex.getCause();
             if (cause instanceof ViewException) {
                 throw (ViewException) cause;

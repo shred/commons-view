@@ -20,9 +20,10 @@
 
 package org.shredzone.commons.view;
 
+import static java.util.stream.Collectors.joining;
+
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.TreeSet;
 
 /**
  * A signature is a hash key for a set of String elements. It is ensured that the same
@@ -44,13 +45,10 @@ public final class Signature {
      *            collection of strings to build the signature for
      */
     public Signature(Collection<String> elements) {
-        StringBuilder sb = new StringBuilder();
-        for (String elem : new TreeSet<String>(elements)) {
-            if (elem != null && !elem.isEmpty()) {
-                sb.append('|').append(elem);
-            }
-        }
-        this.signature = sb.toString();
+        this.signature = elements.stream()
+                .filter(e -> e != null && !e.isEmpty())
+                .sorted()
+                .collect(joining("|"));
     }
 
     /**
@@ -78,7 +76,7 @@ public final class Signature {
 
     @Override
     public String toString() {
-        return (signature.isEmpty() ? "" : signature.substring(1));
+        return signature;
     }
 
 }

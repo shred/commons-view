@@ -57,7 +57,7 @@ public class ViewContextImpl implements ViewContext {
     private String requestServerUrl;
     private String requestServletName;
 
-    private Map<Class<?>, Object> typedValueMap = new HashMap<Class<?>, Object>();
+    private Map<Class<?>, Object> typedValueMap = new HashMap<>();
     private Map<String, String> pathParts;
     private String qualifier;
 

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 import org.shredzone.commons.view.PathContext;
 import org.shredzone.commons.view.Signature;
@@ -82,8 +83,8 @@ public class ViewPattern implements Comparable<ViewPattern> {
             this.signature = null;
         }
 
-        List<Expression> expList = new ArrayList<Expression>();
-        List<String> paramList = new ArrayList<String>();
+        List<Expression> expList = new ArrayList<>();
+        List<String> paramList = new ArrayList<>();
         StringBuilder pb = new StringBuilder();
         compilePattern(this.pattern, pb, expList, paramList);
         this.regEx = Pattern.compile(pb.toString());
@@ -200,16 +201,12 @@ public class ViewPattern implements Comparable<ViewPattern> {
                     + " does not match parameter count " + parameter.size());
         }
 
-        Map<String, String> result = new HashMap<String, String>();
-        for (int ix = 0; ix < parameter.size(); ix++) {
-            String key = parameter.get(ix);
-            String value = m.group(ix + 1);
-            // TODO: only use decode when #encode() was used
-            value = PathUtils.decode(value);
-            result.put(key, value);
-        }
-
-        return result;
+        // TODO: only use decode when #encode() was used
+        return IntStream.range(0, parameter.size()).collect(
+                    HashMap::new,
+                    (map, ix) -> map.put(parameter.get(ix), PathUtils.decode(m.group(ix + 1))),
+                    Map::putAll
+        );
     }
 
     /**
