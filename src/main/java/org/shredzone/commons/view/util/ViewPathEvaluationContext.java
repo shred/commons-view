@@ -26,7 +26,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
  * An {@link EvaluationContext} that offers additional string functions.
- * <p>
+ *
  * <dl>
  *   <dt><code>simplify</code></dt>
  *   <dd>simplifies a unicode string so it can be used in URLs (see {@link PathUtils#simplify(String)})</dd>

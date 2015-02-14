@@ -46,7 +46,7 @@ public final class PathUtils {
      * optimization.
      * <p>
      * On accented characters, the accent is removed. However, currently German umlauts
-     * are converted into their respective ASCII counterparts ('ä' -> 'ae'). Future
+     * are converted into their respective ASCII counterparts ('ä' -&gt; 'ae'). Future
      * implementations may also contain translations for other language's accented
      * characters.
      * <p>
