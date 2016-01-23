@@ -106,6 +106,7 @@
                     </links>
                     <charset>UTF-8</charset>
                     <linksource>true</linksource>
+                    <additionalparam>-Xdoclint:syntax,reference</additionalparam>
                 </configuration>
             </plugin>
         </plugins>
@@ -155,4 +156,3 @@
         </dependency>
     </dependencies>
 </project>
-
