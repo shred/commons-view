@@ -5,18 +5,26 @@
   <version position="right"/>
   <body>
     <links>
-      <item name="Project Management" href="http://www.shredzone.org/projects/show/commons-view"/>
+      <item name="API javadoc" href="./apidocs/index.html"/>
+      <item name="GitHub" href="https://github.com/shred/commons-view"/>
     </links>
     <breadcrumbs>
       <item name="shredzone.org" href="http://www.shredzone.org"/>
-      <item name="commons" href="http://commons.shredzone.org"/>
       <item name="commons-view" href="index.html"/>
     </breadcrumbs>
-    <menu name="Project">
-      <item name="Introduction" href="index.html"/>
-      <item name="Project Management" href="http://www.shredzone.org/projects/show/commons-view"/>
+    <menu name="Documentation">
+      <item name="API javadoc" href="./apidocs/index.html"/>
+      <item name="View Handlers" href="views.html"/>
+      <!-- TODO: <item name="Link Generation" href="links.html"/> -->
+      <item name="View Interceptors" href="interceptors.html"/>
     </menu>
+    <menu ref="modules"/>
     <menu ref="reports"/>
   </body>
-</project>
 
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-fluido-skin</artifactId>
+    <version>1.4</version>
+  </skin>
+</project>
