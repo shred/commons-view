@@ -1,4 +1,4 @@
-# commons-view ![build status](https://jenkins.shredzone.net/project/commons-view/builds/status.png?ref=master)
+# commons-view ![build status](https://shredzone.org/badge/commons-view.svg)
 
 _commons-view_ is a micro framework for parsing URLs, finding the appropriate view handlers, and for creating links to views.
 
@@ -17,7 +17,7 @@ This software is part of the Shredzone Commons.
 
 ## Documentation
 
-See the [online documentation](http://www.shredzone.org/maven/commons-view/) for examples.
+See the [online documentation](https://shredzone.org/maven/commons-view/) for examples.
 
 ## Contribute
 
