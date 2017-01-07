@@ -24,6 +24,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.Normalizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Utility methods for view path management.
@@ -124,13 +126,28 @@ public final class PathUtils {
      * @return suggested suffix, or "bin" if there is no known suffix
      */
     public static String suffix(String mime) {
-        // TODO: more suffixes
+        // Prominent Mime Types
         switch (mime) {
-            case "image/png":   return "png";
-            case "image/jpeg":  return "jpg";
-            case "image/gif":   return "gif";
-            default:            return "bin";
+            case "image/png":     return "png";
+            case "image/jpeg":    return "jpg";
+            case "image/gif":     return "gif";
+            case "image/svg+xml": return "svg";
+            case "image/tiff":    return "tif";
         }
+
+        // Try to guess
+        Matcher m = Pattern.compile("^.*?/(.{1,6}?)(\\+.*)?$").matcher(mime);
+        if (m.matches()) {
+            return m.group(1);
+        }
+
+        // Is it a text?
+        if (mime.startsWith("text/")) {
+            return "txt";
+        }
+
+        // Fallback to bin
+        return "bin";
     }
 
     /**
