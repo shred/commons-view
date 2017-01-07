@@ -20,6 +20,7 @@
 
 package org.shredzone.commons.view.impl;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -28,6 +29,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -61,10 +63,10 @@ import org.springframework.util.StringUtils;
 public class ViewServiceImpl implements ViewService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private @Resource ViewManager viewManager;
-    private @Resource ServletContext servletContext;
-    private @Resource ConversionService conversionService;
-    private @Resource ApplicationContext appContext;
+    @Resource private ViewManager viewManager;
+    @Resource private ServletContext servletContext;
+    @Resource private ConversionService conversionService;
+    @Resource private ApplicationContext appContext;
 
     private Collection<ViewInterceptor> interceptors;
 
@@ -76,7 +78,7 @@ public class ViewServiceImpl implements ViewService {
     }
 
     @Override
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ViewException {
         String path = req.getPathInfo();
         if (path == null) {
             path = "";
@@ -108,11 +110,16 @@ public class ViewServiceImpl implements ViewService {
                 }
             }
 
-            if (ex.getMessage() != null) {
-                resp.sendError(ex.getResponseCode(), ex.getMessage());
-            } else {
-                resp.sendError(ex.getResponseCode());
+            try {
+                if (ex.getMessage() != null) {
+                    resp.sendError(ex.getResponseCode(), ex.getMessage());
+                } else {
+                    resp.sendError(ex.getResponseCode());
+                }
+            } catch (IOException ex2) {
+                throw new ViewException("Failed to send error " + ex.getResponseCode(), ex2);
             }
+
             return;
         }
 
@@ -124,9 +131,13 @@ public class ViewServiceImpl implements ViewService {
                 }
             }
 
-            String fullViewPath = getTemplatePath(renderViewName);
-            RequestDispatcher dispatcher = servletContext.getRequestDispatcher(fullViewPath);
-            dispatcher.forward(req, resp);
+            try {
+                String fullViewPath = getTemplatePath(renderViewName);
+                RequestDispatcher dispatcher = servletContext.getRequestDispatcher(fullViewPath);
+                dispatcher.forward(req, resp);
+            } catch (IOException | ServletException ex) {
+                throw new ViewException("Failed to render " + renderViewName, ex);
+            }
         }
     }
 
@@ -165,7 +176,7 @@ public class ViewServiceImpl implements ViewService {
         if (StringUtils.hasText(view)) {
             // The given view is required...
             vpList = viewManager.getViewPatternsForView(view, data.getQualifier());
-            if (vpList == null) {
+            if (vpList.isEmpty()) {
                 throw new IllegalArgumentException("Unknown view " + view);
             }
 
@@ -196,11 +207,12 @@ public class ViewServiceImpl implements ViewService {
             throw new IllegalArgumentException("template name not set");
         }
 
-        if (template.startsWith("/")) {
-            template = template.substring(1);
+        String fullPath = template;
+        if (fullPath.startsWith("/")) {
+            fullPath = fullPath.substring(1);
         }
 
-        return servletContext.getAttribute("jspPath") + template;
+        return servletContext.getAttribute("jspPath") + fullPath;
     }
 
     /**

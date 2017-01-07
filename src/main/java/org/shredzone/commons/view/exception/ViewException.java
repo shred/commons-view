@@ -28,18 +28,41 @@ package org.shredzone.commons.view.exception;
 public class ViewException extends Exception {
     private static final long serialVersionUID = 2960506285496985876L;
 
+    /**
+     * Creates a new {@link ViewException}.
+     */
     public ViewException() {
         super();
     }
 
+    /**
+     * Creates a new {@link ViewException}.
+     *
+     * @param msg
+     *            Message
+     */
     public ViewException(String msg) {
         super(msg);
     }
 
+    /**
+     * Creates a new {@link ViewException}.
+     *
+     * @param cause
+     *            Exception that caused this exception
+     */
     public ViewException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Creates a new {@link ViewException}.
+     *
+     * @param msg
+     *            Message
+     * @param cause
+     *            Exception that caused this exception
+     */
     public ViewException(String msg, Throwable cause) {
         super(msg, cause);
     }

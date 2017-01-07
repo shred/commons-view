@@ -31,18 +31,41 @@ import org.shredzone.commons.view.ViewContext;
 public class ViewContextException extends ViewException {
     private static final long serialVersionUID = -1796171034784340995L;
 
+    /**
+     * Creates a new {@link ViewContextException}.
+     */
     public ViewContextException() {
         super();
     }
 
+    /**
+     * Creates a new {@link ViewContextException}.
+     *
+     * @param msg
+     *            Reason for the failure
+     */
     public ViewContextException(String msg) {
         super(msg);
     }
 
+    /**
+     * Creates a new {@link ViewContextException}.
+     *
+     * @param cause
+     *            Exception that caused the failure
+     */
     public ViewContextException(Throwable cause) {
         super(cause);
     }
 
+    /**
+     * Creates a new {@link ViewContextException}.
+     *
+     * @param msg
+     *            Reason for the failure
+     * @param cause
+     *            Exception that caused the failure
+     */
     public ViewContextException(String msg, Throwable cause) {
         super(msg, cause);
     }

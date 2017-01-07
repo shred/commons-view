@@ -66,9 +66,13 @@ public final class PathUtils {
             if ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z')) {
                 result.append(ch);
                 lastWasDash = false;
+
             } else if (ch == ' ' || ch == '+' || ch == '-' || ch == '_' || ch == '&') {
-                if (!lastWasDash) result.append('-');
+                if (!lastWasDash) {
+                    result.append('-');
+                }
                 lastWasDash = true;
+
             } else if (ch >= 128) {
                 // TODO: German-centric... Is there an international implementation?
                 switch (ch) {
@@ -143,7 +147,7 @@ public final class PathUtils {
         try {
             return URLEncoder.encode(string, "utf-8");
         } catch (UnsupportedEncodingException ex) {
-            throw new InternalError("no utf-8 encoding?!");
+            throw new InternalError("no utf-8 encoding?!", ex);
         }
     }
 
@@ -161,7 +165,7 @@ public final class PathUtils {
         try {
             return URLDecoder.decode(string, "utf-8");
         } catch (UnsupportedEncodingException ex) {
-            throw new InternalError("no utf-8 encoding?!");
+            throw new InternalError("no utf-8 encoding?!", ex);
         }
     }
 

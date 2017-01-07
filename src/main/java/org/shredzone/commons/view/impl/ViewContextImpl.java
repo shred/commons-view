@@ -52,7 +52,7 @@ import org.springframework.stereotype.Component;
 @Scope("request")
 public class ViewContextImpl implements ViewContext {
 
-    private @Resource HttpServletRequest req;
+    @Resource private HttpServletRequest req;
 
     private String requestServerUrl;
     private String requestServletName;

@@ -52,8 +52,8 @@ import org.springframework.util.StringUtils;
 public class ViewManager {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private @Resource ApplicationContext applicationContext;
-    private @Resource ConversionService conversionService;
+    @Resource private ApplicationContext applicationContext;
+    @Resource private ConversionService conversionService;
 
     private Map<String, Map<String, List<ViewPattern>>> patternMap = new HashMap<>();
     private Map<String, Map<Signature, ViewPattern>> signatureMap = new HashMap<>();
@@ -75,8 +75,7 @@ public class ViewManager {
      *            View name
      * @param qualifier
      *            Qualifier name, or {@code null}
-     * @return Collection of matching {@link ViewPattern}, or {@code null} if there is no
-     *         such view
+     * @return Collection of matching {@link ViewPattern}, empty if there is no such view
      */
     public Collection<ViewPattern> getViewPatternsForView(String view, String qualifier) {
         Map<String, List<ViewPattern>> viewMap = patternMap.get(view);
@@ -86,7 +85,7 @@ public class ViewManager {
                 return Collections.unmodifiableCollection(result);
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 
     /**

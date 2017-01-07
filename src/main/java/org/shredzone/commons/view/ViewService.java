@@ -48,7 +48,7 @@ public interface ViewService {
      * @throws Exception
      *             if the request could not be handled
      */
-    void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws Exception;
+    void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ViewException;
 
     /**
      * Gets the {@link ViewContext} of the current request.

@@ -41,6 +41,8 @@ import org.shredzone.commons.view.annotation.ViewHandler;
 import org.shredzone.commons.view.exception.PageNotFoundException;
 import org.shredzone.commons.view.exception.ViewContextException;
 import org.shredzone.commons.view.exception.ViewException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.util.ReflectionUtils;
@@ -53,6 +55,8 @@ import org.springframework.util.ReflectionUtils;
  * @author Richard "Shred" Körber
  */
 public class ViewInvoker {
+    private static final Logger LOG = LoggerFactory.getLogger(ViewInvoker.class);
+
     private final Object bean;
     private final Method method;
     private final ConversionService conversionService;
@@ -136,7 +140,7 @@ public class ViewInvoker {
 
         try {
             Object renderViewName = ReflectionUtils.invokeMethod(method, bean, values);
-            return (renderViewName != null ? renderViewName.toString() : null);
+            return renderViewName != null ? renderViewName.toString() : null;
         } catch (UndeclaredThrowableException|IllegalStateException ex) {
             Throwable cause = ex.getCause();
             if (cause instanceof ViewException) {
@@ -234,6 +238,7 @@ public class ViewInvoker {
             return context.getValueOfType(type);
         } catch (ViewContextException ex) {
             // ignore and continue...
+            LOG.debug("Failed to get value of type {} from context", type, ex);
         }
 
         // Who the heck would need this...

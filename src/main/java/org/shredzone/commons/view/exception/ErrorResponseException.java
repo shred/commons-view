@@ -30,15 +30,32 @@ public class ErrorResponseException extends ViewException {
 
     private final int responseCode;
 
+    /**
+     * Creates a new {@link ErrorResponseException}.
+     *
+     * @param responseCode
+     *            HTTP response code
+     */
     public ErrorResponseException(int responseCode) {
         this.responseCode = responseCode;
     }
 
+    /**
+     * Creates a new {@link ErrorResponseException}.
+     *
+     * @param responseCode
+     *            HTTP response code
+     * @param msg
+     *            HTTP response message
+     */
     public ErrorResponseException(int responseCode, String msg) {
         super(msg);
         this.responseCode = responseCode;
     }
 
+    /**
+     * @return HTTP response code
+     */
     public int getResponseCode() {
         return responseCode;
     }

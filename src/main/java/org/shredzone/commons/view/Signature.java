@@ -36,7 +36,7 @@ import java.util.Collection;
  */
 public final class Signature {
 
-    private final String signature;
+    private final String sig;
 
     /**
      * Instantiates a new signature.
@@ -45,7 +45,7 @@ public final class Signature {
      *            collection of strings to build the signature for
      */
     public Signature(Collection<String> elements) {
-        this.signature = elements.stream()
+        this.sig = elements.stream()
                 .filter(e -> e != null && !e.isEmpty())
                 .sorted()
                 .collect(joining("|"));
@@ -66,17 +66,17 @@ public final class Signature {
         if (obj == null || !(obj instanceof Signature)) {
             return false;
         }
-        return ((Signature) obj).signature.equals(signature);
+        return ((Signature) obj).sig.equals(sig);
     }
 
     @Override
     public int hashCode() {
-        return signature.hashCode();
+        return sig.hashCode();
     }
 
     @Override
     public String toString() {
-        return signature;
+        return sig;
     }
 
 }

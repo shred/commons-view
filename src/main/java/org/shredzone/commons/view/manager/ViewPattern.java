@@ -323,4 +323,18 @@ public class ViewPattern implements Comparable<ViewPattern> {
         return o.getWeight() - getWeight();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || (!(obj instanceof ViewPattern))) {
+            return false;
+        }
+
+        return compareTo((ViewPattern) obj) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(getWeight());
+    }
+
 }

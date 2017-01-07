@@ -31,10 +31,19 @@ import javax.servlet.http.HttpServletResponse;
 public class PageNotFoundException extends ErrorResponseException {
     private static final long serialVersionUID = -1119789724918850606L;
 
+    /**
+     * Creates a new {@link PageNotFoundException}.
+     */
     public PageNotFoundException() {
         super(HttpServletResponse.SC_NOT_FOUND);
     }
 
+    /**
+     * Creates a new {@link PageNotFoundException} with a message.
+     *
+     * @param msg
+     *            Message
+     */
     public PageNotFoundException(String msg) {
         super(HttpServletResponse.SC_NOT_FOUND, msg);
     }

@@ -26,6 +26,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.shredzone.commons.view.ViewService;
+import org.shredzone.commons.view.exception.ViewException;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.web.servlet.FrameworkServlet;
 
 /**
@@ -44,8 +47,13 @@ public class ViewServlet extends FrameworkServlet {
 
     @Override
     protected void doService(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        ViewService service = getWebApplicationContext().getBean(ViewService.class);
-        service.handleRequest(req, resp);
+        try {
+            ViewService service = getWebApplicationContext().getBean(ViewService.class);
+            service.handleRequest(req, resp);
+        } catch (ViewException | BeansException ex) {
+            LoggerFactory.getLogger(ViewServlet.class).error("Failed to handle request", ex);
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage()); //NOSONAR
+        }
     }
 
     /**
@@ -62,7 +70,7 @@ public class ViewServlet extends FrameworkServlet {
         String path = config.getInitParameter("jspPath");
         if (path != null) {
             if (!path.endsWith("/")) {
-                path += '/';
+                path += "/";
             }
             jspPath = path;
         }
