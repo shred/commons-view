@@ -45,7 +45,7 @@ public interface ViewService {
      *            {@link HttpServletRequest}
      * @param resp
      *            {@link HttpServletResponse}
-     * @throws Exception
+     * @throws ViewException
      *             if the request could not be handled
      */
     void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ViewException;
