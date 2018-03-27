@@ -1,4 +1,4 @@
-# commons-view ![build status](https://shredzone.org/badge/commons-view.svg) ![maven central](https://maven-badges.herokuapp.com/maven-central/org.shredzone.commons/commons-view/badge.svg)
+# commons-view ![build status](https://shredzone.org/badge/commons-view.svg) ![maven central](https://shredzone.org/maven-central/org.shredzone.commons/commons-view/badge.svg)
 
 _commons-view_ is a micro framework for parsing URLs, finding the appropriate view handlers, and for creating links to views.
 
