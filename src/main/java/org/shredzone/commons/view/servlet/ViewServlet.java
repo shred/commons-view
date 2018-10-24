@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.shredzone.commons.view.ViewService;
 import org.shredzone.commons.view.exception.ViewException;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.FrameworkServlet;
 
@@ -40,8 +39,6 @@ import org.springframework.web.servlet.FrameworkServlet;
  */
 public class ViewServlet extends FrameworkServlet {
     private static final long serialVersionUID = 6193053466721043404L;
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final AtomicReference<ViewService> viewService = new AtomicReference<>();
 
@@ -56,7 +53,7 @@ public class ViewServlet extends FrameworkServlet {
         try {
             getViewService().handleRequest(req, resp);
         } catch (ViewException ex) {
-            logger.error("Failed to handle request", ex);
+            LoggerFactory.getLogger(getClass()).error("Failed to handle request", ex);
             if (!resp.isCommitted()) {
                 resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage()); //NOSONAR
             }
