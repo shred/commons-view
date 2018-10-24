@@ -20,6 +20,8 @@
 
 package org.shredzone.commons.view.servlet;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +41,8 @@ import org.springframework.web.servlet.FrameworkServlet;
 public class ViewServlet extends FrameworkServlet {
     private static final long serialVersionUID = 6193053466721043404L;
 
+    private final AtomicReference<ViewService> viewService = new AtomicReference<>();
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -48,12 +52,23 @@ public class ViewServlet extends FrameworkServlet {
     @Override
     protected void doService(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         try {
-            ViewService service = getWebApplicationContext().getBean(ViewService.class);
-            service.handleRequest(req, resp);
+            getViewService().handleRequest(req, resp);
         } catch (ViewException | BeansException ex) {
             LoggerFactory.getLogger(ViewServlet.class).error("Failed to handle request", ex);
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage()); //NOSONAR
         }
+    }
+
+    /**
+     * Returns the {@link ViewService} singleton.
+     */
+    private ViewService getViewService() {
+        ViewService result = viewService.get();
+        if (result == null) {
+            result = getWebApplicationContext().getBean(ViewService.class);
+            viewService.compareAndSet(null, result);
+        }
+        return result;
     }
 
     /**
