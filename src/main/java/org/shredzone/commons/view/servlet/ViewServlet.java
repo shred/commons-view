@@ -55,7 +55,9 @@ public class ViewServlet extends FrameworkServlet {
             getViewService().handleRequest(req, resp);
         } catch (ViewException | BeansException ex) {
             LoggerFactory.getLogger(ViewServlet.class).error("Failed to handle request", ex);
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage()); //NOSONAR
+            if (!resp.isCommitted()) {
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage()); //NOSONAR
+            }
         }
     }
 
