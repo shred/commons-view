@@ -22,11 +22,15 @@ package org.shredzone.commons.view;
 
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * Context that holds all data required for building a path.
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public interface PathContext {
 
     /**
@@ -34,7 +38,7 @@ public interface PathContext {
      *
      * @return {@link Signature} object
      */
-    Signature getSignature();
+    @Nonnull Signature getSignature();
 
     /**
      * Gets the qualifier to be used.
@@ -48,6 +52,6 @@ public interface PathContext {
      *
      * @return map of variables
      */
-    Map<String, Object> getVariables();
+    @Nonnull Map<String, Object> getVariables();
 
 }

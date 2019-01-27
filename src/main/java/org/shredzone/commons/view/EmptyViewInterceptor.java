@@ -22,6 +22,7 @@ package org.shredzone.commons.view;
 
 import java.lang.reflect.Method;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,6 +34,7 @@ import org.shredzone.commons.view.exception.ErrorResponseException;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public class EmptyViewInterceptor implements ViewInterceptor {
 
     @Override

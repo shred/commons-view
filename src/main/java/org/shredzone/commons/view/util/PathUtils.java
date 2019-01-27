@@ -20,18 +20,22 @@
 
 package org.shredzone.commons.view.util;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Utility methods for view path management.
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public final class PathUtils {
 
     private PathUtils() {
@@ -59,7 +63,7 @@ public final class PathUtils {
      *            path part to simplify
      * @return simplified path part
      */
-    public static String simplify(String part) {
+    public static @Nonnull String simplify(String part) {
         StringBuilder result = new StringBuilder(part.length());
 
         boolean lastWasDash = false;
@@ -125,7 +129,7 @@ public final class PathUtils {
      *            content type to find a suffix for
      * @return suggested suffix, or "bin" if there is no known suffix
      */
-    public static String suffix(String mime) {
+    public static @Nonnull String suffix(String mime) {
         // Prominent Mime Types
         switch (mime) {
             case "image/png":     return "png";
@@ -160,12 +164,8 @@ public final class PathUtils {
      *            string to be URL encoded
      * @return encoded string
      */
-    public static String encode(String string) {
-        try {
-            return URLEncoder.encode(string, "utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            throw new InternalError("no utf-8 encoding?!", ex);
-        }
+    public static @Nonnull String encode(String string) {
+        return URLEncoder.encode(string, StandardCharsets.UTF_8);
     }
 
     /**
@@ -178,12 +178,8 @@ public final class PathUtils {
      *            the string to be URL decoded
      * @return decoded string
      */
-    public static String decode(String string) {
-        try {
-            return URLDecoder.decode(string, "utf-8");
-        } catch (UnsupportedEncodingException ex) {
-            throw new InternalError("no utf-8 encoding?!", ex);
-        }
+    public static @Nonnull String decode(String string) {
+        return URLDecoder.decode(string, StandardCharsets.UTF_8);
     }
 
 }

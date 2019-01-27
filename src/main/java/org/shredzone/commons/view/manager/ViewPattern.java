@@ -29,6 +29,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
+
 import org.shredzone.commons.view.PathContext;
 import org.shredzone.commons.view.Signature;
 import org.shredzone.commons.view.annotation.View;
@@ -46,6 +50,8 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
+@Immutable
 public class ViewPattern implements Comparable<ViewPattern> {
     private static final Pattern PATH_PART = Pattern.compile("\\$\\{([^\\}]+)\\}");
 
@@ -138,7 +144,7 @@ public class ViewPattern implements Comparable<ViewPattern> {
      *
      * @return regular expression {@link Pattern}.
      */
-    public Pattern getRegEx() {
+    public @Nonnull Pattern getRegEx() {
         return regEx;
     }
 
@@ -148,7 +154,7 @@ public class ViewPattern implements Comparable<ViewPattern> {
      *
      * @return List of {@link Expression}
      */
-    public List<Expression> getExpression() {
+    public @Nonnull List<Expression> getExpression() {
         return expression;
     }
 
@@ -157,7 +163,7 @@ public class ViewPattern implements Comparable<ViewPattern> {
      *
      * @return List of parameters
      */
-    public List<String> getParameters() {
+    public @Nonnull List<String> getParameters() {
         return parameter;
     }
 

@@ -25,6 +25,8 @@ import static java.util.stream.Collectors.joining;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * A signature is a hash key for a set of String elements. It is ensured that the same
  * collection of Strings results in an equal signature object, irregarding of the string
@@ -34,6 +36,7 @@ import java.util.Collection;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public final class Signature {
 
     private final String sig;

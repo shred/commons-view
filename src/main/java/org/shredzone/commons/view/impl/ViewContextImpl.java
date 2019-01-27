@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +51,7 @@ import org.springframework.stereotype.Component;
  */
 @Component("viewContext")
 @Scope("request")
+@ParametersAreNonnullByDefault
 public class ViewContextImpl implements ViewContext {
 
     @Resource private HttpServletRequest req;

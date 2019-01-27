@@ -20,6 +20,7 @@
 
 package org.shredzone.commons.view.exception;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -28,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public class PageNotFoundException extends ErrorResponseException {
     private static final long serialVersionUID = -1119789724918850606L;
 

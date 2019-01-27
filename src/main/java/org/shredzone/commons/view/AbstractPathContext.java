@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * An abstract implementation of {@link PathContext}. Extending classes need to offer
  * getters and setters for their properties. If a setter is used, the property name needs
@@ -33,6 +35,7 @@ import java.util.Set;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public abstract class AbstractPathContext implements PathContext {
 
     private final Set<String> propSet = new HashSet<>();

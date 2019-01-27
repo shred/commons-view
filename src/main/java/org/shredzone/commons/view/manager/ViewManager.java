@@ -28,6 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
@@ -49,6 +52,7 @@ import org.springframework.util.StringUtils;
  * @author Richard "Shred" Körber
  */
 @Component
+@ParametersAreNonnullByDefault
 public class ViewManager {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -64,7 +68,7 @@ public class ViewManager {
      *
      * @return Collection of matching {@link ViewPattern}
      */
-    public Collection<ViewPattern> getViewPatterns() {
+    public @Nonnull Collection<ViewPattern> getViewPatterns() {
         return Collections.unmodifiableCollection(patternOrder);
     }
 
@@ -77,7 +81,7 @@ public class ViewManager {
      *            Qualifier name, or {@code null}
      * @return Collection of matching {@link ViewPattern}, empty if there is no such view
      */
-    public Collection<ViewPattern> getViewPatternsForView(String view, String qualifier) {
+    public @Nonnull Collection<ViewPattern> getViewPatternsForView(String view, @Nullable String qualifier) {
         Map<String, List<ViewPattern>> viewMap = patternMap.get(view);
         if (viewMap != null) {
             List<ViewPattern> result = viewMap.get(qualifier);
@@ -98,7 +102,7 @@ public class ViewManager {
      * @return {@link ViewPattern} found, or {@code null} if there is no such
      *         {@link ViewPattern}
      */
-    public ViewPattern getViewPatternForSignature(Signature signature, String qualifier) {
+    public ViewPattern getViewPatternForSignature(Signature signature, @Nullable String qualifier) {
         Map<Signature, ViewPattern> sigMap = signatureMap.get(qualifier);
         if (sigMap != null) {
             return sigMap.get(signature);
@@ -182,7 +186,7 @@ public class ViewManager {
      *            {@link View} annotation
      * @return view name to be used for this view
      */
-    private String computeViewName(Method method, View anno) {
+    private @Nonnull String computeViewName(Method method, View anno) {
         if (StringUtils.hasText(anno.name())) {
             return anno.name();
         }

@@ -20,11 +20,14 @@
 
 package org.shredzone.commons.view.exception;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * This exception is thrown when a generic HTTP error happened.
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public class ErrorResponseException extends ViewException {
     private static final long serialVersionUID = 8993197244051374195L;
 

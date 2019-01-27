@@ -20,6 +20,8 @@
 
 package org.shredzone.commons.view.exception;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import org.shredzone.commons.view.ViewContext;
 
 /**
@@ -28,6 +30,7 @@ import org.shredzone.commons.view.ViewContext;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public class ViewContextException extends ViewException {
     private static final long serialVersionUID = -1796171034784340995L;
 

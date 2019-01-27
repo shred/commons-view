@@ -24,6 +24,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.concurrent.Immutable;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -54,6 +57,8 @@ import org.springframework.util.ReflectionUtils;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
+@Immutable
 public class ViewInvoker {
     private static final Logger LOG = LoggerFactory.getLogger(ViewInvoker.class);
 
@@ -110,12 +115,12 @@ public class ViewInvoker {
     /**
      * The Spring bean that was annotated with {@link ViewHandler}.
      */
-    public Object getBean() { return bean; }
+    public @Nonnull Object getBean() { return bean; }
 
     /**
      * The target view handler method that was annotated with {@link View}.
      */
-    public Method getMethod() { return method; }
+    public @Nonnull Method getMethod() { return method; }
 
     /**
      * Invokes the view handler.

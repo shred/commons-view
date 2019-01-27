@@ -22,6 +22,10 @@ package org.shredzone.commons.view;
 
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import org.shredzone.commons.view.exception.ViewContextException;
 
 /**
@@ -32,6 +36,7 @@ import org.shredzone.commons.view.exception.ViewContextException;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public interface ViewContext {
 
     /**
@@ -40,14 +45,14 @@ public interface ViewContext {
      *
      * @return the server URL (e.g. "http://www.shredzone.de")
      */
-    String getRequestServerUrl();
+    @Nonnull String getRequestServerUrl();
 
     /**
      * Returns the name of the servlet that processed the request.
      *
      * @return the servlet name (e.g. "/cilla")
      */
-    String getRequestServletName();
+    @Nonnull String getRequestServletName();
 
     /**
      * Adds a typed argument to this context. Typed arguments are available to the view
@@ -59,7 +64,7 @@ public interface ViewContext {
      * @param value
      *            the value to register, may be {@code null}
      */
-    <T> void putTypedArgument(Class<T> type, T value);
+    <T> void putTypedArgument(Class<T> type, @Nullable T value);
 
     /**
      * Gets a value that matches the requested type.
@@ -73,7 +78,7 @@ public interface ViewContext {
      * @throws ViewContextException
      *             if there was no data satisfying that type
      */
-    <T> T getValueOfType(Class<T> type) throws ViewContextException;
+    <T> T getValueOfType(@Nullable Class<T> type) throws ViewContextException;
 
     /**
      * Sets the path parts from resolving the view URL. Should only be invoked from the
@@ -89,7 +94,7 @@ public interface ViewContext {
      *
      * @return Map of path parts
      */
-    Map<String, String> getPathParts();
+    @Nonnull Map<String, String> getPathParts();
 
     /**
      * Gets a parameter from the request URL's search part.
@@ -106,7 +111,7 @@ public interface ViewContext {
      * @param qualifier
      *            qualifier to be used, or {@code null} for the standard qualifier
      */
-    void setQualifier(String qualifier);
+    void setQualifier(@Nullable String qualifier);
 
     /**
      * Gets a View qualifier.

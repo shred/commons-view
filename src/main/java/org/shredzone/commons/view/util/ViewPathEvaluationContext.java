@@ -20,6 +20,8 @@
 
 package org.shredzone.commons.view.util;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import org.shredzone.commons.view.PathContext;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
@@ -40,6 +42,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public class ViewPathEvaluationContext extends StandardEvaluationContext {
 
     /**

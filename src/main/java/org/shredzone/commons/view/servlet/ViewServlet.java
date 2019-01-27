@@ -22,6 +22,8 @@ package org.shredzone.commons.view.servlet;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +39,7 @@ import org.springframework.web.servlet.FrameworkServlet;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public class ViewServlet extends FrameworkServlet {
     private static final long serialVersionUID = 6193053466721043404L;
 
@@ -63,7 +66,7 @@ public class ViewServlet extends FrameworkServlet {
     /**
      * Returns the {@link ViewService} singleton.
      */
-    private ViewService getViewService() {
+    private @Nonnull ViewService getViewService() {
         ViewService result = viewService.get();
         if (result == null) {
             result = getWebApplicationContext().getBean(ViewService.class);
@@ -81,7 +84,7 @@ public class ViewServlet extends FrameworkServlet {
      *            {@link ServletConfig}
      * @return JSP path, must end with a trailing '/'
      */
-    protected String getJspPath(ServletConfig config) {
+    protected @Nonnull String getJspPath(ServletConfig config) {
         String jspPath = "/";
         String path = config.getInitParameter("jspPath");
         if (path != null) {

@@ -20,6 +20,8 @@
 
 package org.shredzone.commons.view;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,6 +38,7 @@ import org.shredzone.commons.view.exception.ViewException;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public interface ViewService {
 
     /**
@@ -95,6 +98,6 @@ public interface ViewService {
      *            Template name
      * @return Template path
      */
-    String getTemplatePath(String template);
+    @Nonnull String getTemplatePath(String template);
 
 }

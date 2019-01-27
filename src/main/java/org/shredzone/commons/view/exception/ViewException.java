@@ -20,11 +20,14 @@
 
 package org.shredzone.commons.view.exception;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+
 /**
  * This exception is raised when a view could not be rendered for various reasons.
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public class ViewException extends Exception {
     private static final long serialVersionUID = 2960506285496985876L;
 

@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
@@ -60,6 +62,7 @@ import org.springframework.util.StringUtils;
  * @author Richard "Shred" Körber
  */
 @Component
+@ParametersAreNonnullByDefault
 public class ViewServiceImpl implements ViewService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -223,7 +226,7 @@ public class ViewServiceImpl implements ViewService {
      *            {@link PathContext} to be used as root object
      * @return {@link EvaluationContext} to be used for evaluation
      */
-    protected EvaluationContext createEvaluationContext(PathContext context) {
+    protected @Nonnull EvaluationContext createEvaluationContext(PathContext context) {
         ViewPathEvaluationContext evContext = new ViewPathEvaluationContext(context);
         evContext.setTypeConverter(new StandardTypeConverter(conversionService));
         return evContext;
@@ -238,7 +241,7 @@ public class ViewServiceImpl implements ViewService {
      *            {@link PathType} to be returned
      * @return URL to this path
      */
-    private String processPath(String path, PathType type) {
+    private @Nonnull String processPath(String path, PathType type) {
         if (type == PathType.VIEW) {
             return path;
         }
