@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.shredzone.commons</groupId>
     <artifactId>commons-view</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
     <name>Shredzone Commons: View</name>
     <description>Shredzone Commons: Enhanced Spring Views</description>
     <url>http://commons.shredzone.org</url>
@@ -18,7 +18,7 @@
         <url>https://github.com/shred/commons-view/</url>
         <connection>scm:git:git@github.com:shred/commons-view.git</connection>
         <developerConnection>scm:git:git@github.com:shred/commons-view.git</developerConnection>
-      <tag>v1.4</tag>
+      <tag>HEAD</tag>
   </scm>
     <issueManagement>
         <system>GitHub Issues</system>
