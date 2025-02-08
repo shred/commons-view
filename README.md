@@ -21,8 +21,8 @@ See the [online documentation](https://shredzone.org/maven/commons-view/) for ex
 
 ## Contribute
 
-* Fork the [Source code at GitHub](https://github.com/shred/commons-view). Feel free to send pull requests.
-* Found a bug? [File a bug report!](https://github.com/shred/commons-view/issues)
+* Fork the [Source code at Codeberg](https://codeberg.org/shred/commons-view). Feel free to send pull requests.
+* Found a bug? [File a bug report!](https://codeberg.org/shred/commons-view/issues)
 
 ## License
 
